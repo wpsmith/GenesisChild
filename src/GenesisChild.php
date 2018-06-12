@@ -35,6 +35,28 @@ if ( ! class_exists( 'WPS\Core\Genesis' ) ) {
 	 */
 	class GenesisChild extends Singleton {
 
+		protected function __construct() {
+			add_filter( 'auto_update_theme', array( $this, 'auto_update_genesis' ), 10, 2 );
+			parent::__construct();
+		}
+
+		/**
+		 * Auto update specific theme.
+		 *
+		 * @param bool   $update Whether to allow auto-update.
+		 * @param string $item   Item slug.
+		 *
+		 * @return bool Whether to update plugin.
+		 */
+		function auto_update_genesis( $update, $item ) {
+			\WPS\write_log(array( $update, $item ), 'update');
+			if ( 'genesis' === $item->theme ) {
+				return true;
+			} else {
+				return $update; // Else, use the normal API response to decide whether to update or not
+			}
+		}
+
 		/**
 		 * Hook into plugins_loaded.
 		 */
