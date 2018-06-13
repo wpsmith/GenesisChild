@@ -37,7 +37,38 @@ if ( ! class_exists( 'WPS\Core\Genesis' ) ) {
 
 		protected function __construct() {
 			add_filter( 'auto_update_theme', array( $this, 'auto_update_genesis' ), 10, 2 );
+			remove_action( 'genesis_meta', array( $this, 'genesis_load_stylesheet' ) );
+			add_action( 'genesis_meta', array( $this, 'load_stylesheet' ) );
 			parent::__construct();
+		}
+
+		/**
+		 * Echo reference to the style sheet.
+		 *
+		 * If a child theme is active, it loads the child theme's stylesheet, otherwise, it loads the Genesis style sheet.
+		 *
+		 * @see genesis_enqueue_main_stylesheet() Enqueue main style sheet.
+		 */
+		public function load_stylesheet() {
+
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_main_stylesheet' ), 5 );
+
+		}
+
+		/**
+		 * Enqueue main style sheet.
+		 *
+		 * Properly enqueue the main style sheet.
+		 *
+		 */
+		public function enqueue_main_stylesheet() {
+
+			$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
+			$version = filemtime( get_stylesheet_directory() . '/style' . $suffix );
+
+			$handle  = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? sanitize_title_with_dashes( CHILD_THEME_NAME ) : 'child-theme';
+			wp_enqueue_style( $handle, get_stylesheet_directory_uri() . '/style' . $suffix, false, $version );
+
 		}
 
 		/**
