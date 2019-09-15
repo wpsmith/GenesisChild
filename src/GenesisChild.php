@@ -17,7 +17,7 @@
  * @since      0.1.0
  */
 
-namespace WPS\WP;
+namespace WPS\WP\Themes;
 
 use WPS\Core\Singleton;
 
@@ -65,11 +65,11 @@ if ( ! class_exists( __NAMESPACE__ . '\GenesisChild' ) ) {
 		 */
 		public function enqueue_main_stylesheet() {
 
-			$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
-			$version = filemtime( get_stylesheet_directory() . '/style' . $suffix );
+			$suffix  = wp_scripts_get_suffix();
+			$version = filemtime( get_stylesheet_directory() . "/style$suffix.css" );
 
 			$handle  = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? sanitize_title_with_dashes( CHILD_THEME_NAME ) : 'child-theme';
-			wp_enqueue_style( $handle, get_stylesheet_directory_uri() . '/style' . $suffix, false, $version );
+			wp_enqueue_style( $handle, get_stylesheet_directory_uri() . "/style$suffix.css", false, $version );
 
 		}
 

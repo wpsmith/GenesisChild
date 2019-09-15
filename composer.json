@@ -28,7 +28,7 @@
   },
   "autoload": {
     "psr-4": {
-      "WPS\\WP\\": "src/"
+      "WPS\\WP\\Themes\\": "src/"
     }
   }
 }
